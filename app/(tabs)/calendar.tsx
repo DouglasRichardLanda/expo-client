@@ -34,7 +34,6 @@ export default function CalendarPage() {
   };
   LocaleConfig.defaultLocale = 'ru';
 
-
   const [state14, setState14] = useState<{first: string, second: string, full: string}[]>([])
 
   const [selected, setSelected] = useState('');
@@ -42,6 +41,7 @@ export default function CalendarPage() {
 
   const today = new Date().toISOString().split('T')[0];
   const [processed, setProcessed] = useState<boolean>(false)
+
   useEffect(() => {
     fetch_week_report("12345678", today).then(async (data: any) => {
       const {firstHalfResults, secondHalfResults, fullDayResults} = await data.json()

@@ -4,8 +4,8 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 export default function ProfileScreen() {
   const user = {
     avatar: 'https://via.placeholder.com/100', // Placeholder image
-    firstName: 'John',
-    lastName: 'Doe',
+    firstName: 'Антон',
+    lastName: 'Кравчук',
     email: 'john.doe@example.com',
     registrationDate: '2024-03-22',
     packageType: 'Premium',
