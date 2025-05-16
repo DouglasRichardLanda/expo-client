@@ -1,7 +1,7 @@
 import { TouchableOpacity, View, Text } from 'react-native';
 import { useRouter } from 'expo-router';
 
-const CalendarDay = ({ date, state }) => {
+export default function CalendarDay ({ date, state }: {date: any, state: any}){
   const router = useRouter();
   const dateString: string = date.dateString;
 
@@ -28,3 +28,4 @@ const CalendarDay = ({ date, state }) => {
     </TouchableOpacity>
   );
 };
+

@@ -2,6 +2,7 @@ import {Calendar, CalendarList, Agenda, LocaleConfig} from 'react-native-calenda
 import {Text, View, TextInput, StyleSheet, ScrollView, FlatList, ActivityIndicator} from "react-native";
 import {useEffect, useState} from "react";
 import {Picker} from '@react-native-picker/picker';
+import CalendarDay from "@/components/CalendarDay";
 
 const IP = "192.168.0.27"
 async function fetch_week_report (id: string, date: string) {
@@ -116,91 +117,92 @@ export default function CalendarPage() {
           </Text>
         )}
         markingType="custom"
-        dayComponent={({ date, state }:{date: any, state: any}) => {
-          const dayEntry = days.find((d) => d.date === date.dateString);
-          const isMarked = !!dayEntry;
-
-          const indexEntry = dayEntry?.id;
-          const isToday = date.dateString === today;
-
-
-          return (
-            <View style={{ alignItems: 'center', padding: 6, borderRadius: 10, backgroundColor: '#D6F1FF', borderWidth: 2,
-              borderColor: isToday ? 'black' : "transparent"}}>
-              <Text
-                // onPress={() => {
-                //   const selectedDay = days.find(([dateString]) => dateString === date.dateString);
-                //
-                //   if (days.includes(date.dateString)) {
-                //     setSelected(date.dateString)
-                //   } else {
-                //     setSelected(new Date().toISOString().split('T')[0])
-                //   }
-                //   console.log(selected) // Set the selected date when the day is pressed
-                // }}
-                style={{ color: state === 'disabled' ? '#d9e1e8' : '#2d4150' }}>
-                {date.day}
-              </Text>
-
-              {isMarked && (
-                <View style={{ flexDirection: 'row', marginTop: 2 }}>
-                  {[...Array(1)].map((_, i) => (
-                    <View
-                      key={i}
-                      style={{
-                        width: 6,
-                        height: 6,
-                        borderRadius: 3,
-                        backgroundColor: dayEntry ? state14[dayEntry.id].first : "black",
-                        marginHorizontal: 1,
-                      }}
-                    />
-                  ))}
-                  {[...Array(1)].map((_, i) => (
-                    <View
-                      key={i}
-                      style={{
-                        width: 9,
-                        height: 9,
-                        borderRadius: 3,
-                        backgroundColor: dayEntry ? state14[dayEntry.id].full : "black",
-                        marginHorizontal: 1,
-                      }}
-                    />
-                  ))}
-                  {[...Array(1)].map((_, i) => (
-                    <View
-                      key={i}
-                      style={{
-                        width: 6,
-                        height: 6,
-                        borderRadius: 3,
-                        backgroundColor: dayEntry ? state14[dayEntry.id].second : "black",
-                        marginHorizontal: 1,
-                      }}
-                    />
-                  ))}
-                </View>
-              )}
-              {!isMarked && (
-                <View style={{ flexDirection: 'row', marginTop: 2 }}>
-                  {[...Array(3)].map((_, i) => (
-                    <View
-                      key={i}
-                      style={{
-                        width: 8,
-                        height: 8,
-                        borderRadius: 3,
-                        backgroundColor: ['gray', 'gray', 'gray'][i],
-                        marginHorizontal: 1,
-                      }}
-                    />
-                  ))}
-                </View>
-              )}
-            </View>
-          );
-        }}
+        dayComponent={(date: any, state: any) => CalendarDay(date, state)}
+        // dayComponent={({ date, state }:{date: any, state: any}) => {
+        //   const dayEntry = days.find((d) => d.date === date.dateString);
+        //   const isMarked = !!dayEntry;
+        //
+        //   const indexEntry = dayEntry?.id;
+        //   const isToday = date.dateString === today;
+        //
+        //
+        //   return (
+        //     <View style={{ alignItems: 'center', padding: 6, borderRadius: 10, backgroundColor: '#D6F1FF', borderWidth: 2,
+        //       borderColor: isToday ? 'black' : "transparent"}}>
+        //       <Text
+        //         // onPress={() => {
+        //         //   const selectedDay = days.find(([dateString]) => dateString === date.dateString);
+        //         //
+        //         //   if (days.includes(date.dateString)) {
+        //         //     setSelected(date.dateString)
+        //         //   } else {
+        //         //     setSelected(new Date().toISOString().split('T')[0])
+        //         //   }
+        //         //   console.log(selected) // Set the selected date when the day is pressed
+        //         // }}
+        //         style={{ color: state === 'disabled' ? '#d9e1e8' : '#2d4150' }}>
+        //         {date.day}
+        //       </Text>
+        //
+        //       {isMarked && (
+        //         <View style={{ flexDirection: 'row', marginTop: 2 }}>
+        //           {[...Array(1)].map((_, i) => (
+        //             <View
+        //               key={i}
+        //               style={{
+        //                 width: 6,
+        //                 height: 6,
+        //                 borderRadius: 3,
+        //                 backgroundColor: dayEntry ? state14[dayEntry.id].first : "black",
+        //                 marginHorizontal: 1,
+        //               }}
+        //             />
+        //           ))}
+        //           {[...Array(1)].map((_, i) => (
+        //             <View
+        //               key={i}
+        //               style={{
+        //                 width: 9,
+        //                 height: 9,
+        //                 borderRadius: 3,
+        //                 backgroundColor: dayEntry ? state14[dayEntry.id].full : "black",
+        //                 marginHorizontal: 1,
+        //               }}
+        //             />
+        //           ))}
+        //           {[...Array(1)].map((_, i) => (
+        //             <View
+        //               key={i}
+        //               style={{
+        //                 width: 6,
+        //                 height: 6,
+        //                 borderRadius: 3,
+        //                 backgroundColor: dayEntry ? state14[dayEntry.id].second : "black",
+        //                 marginHorizontal: 1,
+        //               }}
+        //             />
+        //           ))}
+        //         </View>
+        //       )}
+        //       {!isMarked && (
+        //         <View style={{ flexDirection: 'row', marginTop: 2 }}>
+        //           {[...Array(3)].map((_, i) => (
+        //             <View
+        //               key={i}
+        //               style={{
+        //                 width: 8,
+        //                 height: 8,
+        //                 borderRadius: 3,
+        //                 backgroundColor: ['gray', 'gray', 'gray'][i],
+        //                 marginHorizontal: 1,
+        //               }}
+        //             />
+        //           ))}
+        //         </View>
+        //       )}
+        //     </View>
+        //   );
+        // }}
       />
 
 
