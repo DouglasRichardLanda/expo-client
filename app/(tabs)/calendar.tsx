@@ -202,23 +202,21 @@ export default function CalendarPage() {
           );
         }}
       />
-      <View style={styles.notebookContainer}>
-        <Text style={styles.notebookHeader}>Заметки на {selected || "(выбери день)"}</Text>
-        <ScrollView style={styles.notebook}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Опиши свой день..."
-            multiline
-            value={note}
-            onChangeText={setNote}
-          />
-          {/*<FlatList*/}
-          {/*  data={filteredList}*/}
-          {/*  keyExtractor={(item, index) => index.toString()}*/}
-          {/*  renderItem={({ item }) => <Text>{item}</Text>}*/}
-          {/*/>*/}
-        </ScrollView>
-      </View>
+
+
+      {/*<View style={styles.notebookContainer}>*/}
+      {/*  <Text style={styles.notebookHeader}>Заметки на {selected || "(выбери день)"}</Text>*/}
+      {/*  <ScrollView style={styles.notebook}>*/}
+      {/*    <TextInput*/}
+      {/*      style={styles.textInput}*/}
+      {/*      placeholder="Опиши свой день..."*/}
+      {/*      multiline*/}
+      {/*      value={note}*/}
+      {/*      onChangeText={setNote}*/}
+      {/*    />*/}
+
+      {/*  </ScrollView>*/}
+      {/*</View>*/}
     </ScrollView>
   )
 }
