@@ -58,6 +58,7 @@ const AuthScreen = () => {
       <TouchableOpacity onPress={async () => {
         const dummyToken = 'dummy_user_token_123'; // Dummy token
         await AsyncStorage.setItem('userToken', dummyToken);
+        router.replace('/register');
         // setIsLogin(!isLogin)
       }} style={styles.switchButton}>
         <Text style={styles.switchText}>
