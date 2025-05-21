@@ -67,18 +67,6 @@ export default function CalendarPage() {
     }).then(() => setProcessed(true))
   }, [])
 
-
-  // const [inputText, setInputText] = useState('');
-  // const [filteredList, setFilteredList] = useState([]);
-  // const items = [
-  //   'Apple', 'Banana', 'Orange', 'Pineapple', 'Grapes', 'Mango', 'Strawberry',
-  // ];
-  // const handleChange = (text) => {
-  //   setInputText(text);
-  //   const filtered = items.filter(item => item.toLowerCase().includes(text.toLowerCase()));
-  //   setFilteredList(filtered);
-  // };
-
   const days: {date: string, id: number}[] = Array.from({ length: 14 }, (_, i) => {
     const d = new Date(today);
     d.setDate(d.getDate() + i);
@@ -97,6 +85,8 @@ export default function CalendarPage() {
       </View>
     );
   }
+  // @ts-ignore
+  // @ts-ignore
   return (
     <ScrollView>
       <Calendar
