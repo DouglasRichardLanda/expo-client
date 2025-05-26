@@ -10,7 +10,7 @@ export default function IndexPage() {
   useEffect(() => {
     const checkAuth = async () => {
       const token = await AsyncStorage.getItem('userToken');
-      router.replace(token ? '/(tabs)/profile' : '/auth');
+      router.replace(token ? '/(tabs)/profile' : '/auth/auth');
     };
     checkAuth();
   }, []);

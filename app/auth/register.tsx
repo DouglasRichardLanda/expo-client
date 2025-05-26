@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
+import Constants from 'expo-constants';
 
 const isValidEmail = (email: string) =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -14,12 +15,21 @@ const RegisterScreen = () => {
   const [error, setError] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
 
+
+  const IP: string = Constants.expoConfig?.extra?.IP;
+  console.log(IP)
+
   const validating = async () => {
     if (!isValidEmail(email) || name.length < 5) {
       setError(true)
     } else {
-      await fetch('')
-      router.replace("/verify")
+      const response = await fetch(`http://${IP}:5000/register/first`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({name, email})
+      })
+      const {success} = await response.json();
+      success === true ? router.replace("/verify") : null;
     }
   }
 
