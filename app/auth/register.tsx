@@ -17,7 +17,6 @@ const RegisterScreen = () => {
 
 
   const IP: string = Constants.expoConfig?.extra?.IP;
-  console.log(IP)
 
   const validating = async () => {
     if (!isValidEmail(email) || name.length < 5) {
@@ -29,7 +28,7 @@ const RegisterScreen = () => {
         body: JSON.stringify({name, email})
       })
       const {success} = await response.json();
-      success === true ? router.replace("/verify") : null;
+      return success === true ? router.replace("./verify") : null;
     }
   }
 
@@ -64,7 +63,7 @@ const RegisterScreen = () => {
 
       <TouchableOpacity
         onPress={() => {
-          router.replace("/auth")
+          router.replace("/auth/auth")
         }}
         style={{
           position: 'absolute',

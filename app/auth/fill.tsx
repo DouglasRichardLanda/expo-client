@@ -1,41 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
+import Constants from 'expo-constants';
 
 const isValidEmail = (email: string) =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 
-const VerifyScreen = () => {
+const RegisterScreen = () => {
   const router = useRouter();
 
   const [name, setName] = useState<string>("")
   const [email, setEmail] = useState<string>("")
   const [error, setError] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false)
 
-  const validating = () => {
+
+  const IP: string = Constants.expoConfig?.extra?.IP;
+
+  const validating = async () => {
     if (!isValidEmail(email) || name.length < 5) {
       setError(true)
     } else {
-      router.replace("/subscription")
+      const response = await fetch(`http://${IP}:5000/register/first`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({name, email})
+      })
+      const {success} = await response.json();
+      return success === true ? router.replace("./verify") : null;
     }
   }
 
   return (
     <View style={styles.container}>
 
-      <Text style={styles.header}>{'Подтверждение'}</Text>
+      <Text style={styles.header}>{'Заполнение учетной записи'}</Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Имя Фамилия"
-        value={name}
-        onChangeText={(text) => {
-          setName(text)
-          setError(false)
-        }}
-        keyboardType="ascii-capable"
-      />
 
       <TextInput
         style={styles.input}
@@ -49,6 +50,25 @@ const VerifyScreen = () => {
       />
 
       {error && <Text style={{color: "red", marginBottom: 10}}>Введите правильные данные</Text>}
+
+      <TouchableOpacity
+        onPress={() => {
+          router.replace("/auth/auth")
+        }}
+        style={{
+          position: 'absolute',
+          bottom: 40,
+          right: 20,
+          backgroundColor: '#007BFF',
+          borderRadius: 50,
+          width: 40,
+          height: 40,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Text style={{ color: '#fff', fontSize: 10 }}>Login</Text>
+      </TouchableOpacity>
 
       <Button title={"Продолжить"} onPress={validating} />
     </View>
@@ -87,4 +107,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default VerifyScreen;
+export default RegisterScreen;
