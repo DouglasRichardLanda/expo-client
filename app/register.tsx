@@ -2,47 +2,53 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 
+const isValidEmail = (email: string) =>
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+
 const RegisterScreen = () => {
   const router = useRouter();
+
+  const [name, setName] = useState<string>("")
+  const [email, setEmail] = useState<string>("")
+  const [error, setError] = useState<boolean>(false)
+
+  const validating = () => {
+    if (!isValidEmail(email) || name.length < 5) {
+      setError(true)
+    } else {
+      router.replace("/subscription")
+    }
+  }
 
   return (
     <View style={styles.container}>
 
-      <Text style={styles.header}>{'Register'}</Text>
+      <Text style={styles.header}>{'Регистрация'}</Text>
 
       <TextInput
         style={styles.input}
         placeholder="Имя Фамилия"
-        value={""}
-        onChangeText={() => {}}
+        value={name}
+        onChangeText={(text) => {
+          setName(text)
+          setError(false)
+        }}
         keyboardType="ascii-capable"
-      />
-
-      <TextInput
-        style={styles.input}
-        placeholder="Имя отца в иминительном падеже"
-        value={""}
-        onChangeText={() => {}}
-        keyboardType="ascii-capable"
-      />
-
-      <TextInput
-        style={styles.input}
-        placeholder="Дата рождения в виде: 10.10.1995"
-        value={""}
-        onChangeText={() => {}}
-        keyboardType="numeric"
-        maxLength={10}
       />
 
       <TextInput
         style={styles.input}
         placeholder="Почта"
-        value={""}
-        onChangeText={() => {}}
+        value={email}
+        onChangeText={(text) => {
+          setEmail(text)
+          setError(false)
+        }}
         keyboardType="email-address"
-        maxLength={10}
       />
+
+      {error && <Text style={{color: "red", marginBottom: 10}}>Введите правильные данные</Text>}
 
       <TouchableOpacity
         onPress={() => {
@@ -63,9 +69,7 @@ const RegisterScreen = () => {
         <Text style={{ color: '#fff', fontSize: 10 }}>Login</Text>
       </TouchableOpacity>
 
-      <Button title={"Submit"} onPress={() => {
-        router.replace("/subscription")
-      }} />
+      <Button title={"Продолжить"} onPress={validating} />
     </View>
   );
 };

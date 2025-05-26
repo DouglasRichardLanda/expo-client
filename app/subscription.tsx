@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Button, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import {useRouter} from "expo-router";
-import {backgroundColor} from "react-native-calendars/src/style";
 
 export default function SubscriptionForm() {
   const [selected, setSelected] = useState<'standard' | 'premium' | null>(null);
