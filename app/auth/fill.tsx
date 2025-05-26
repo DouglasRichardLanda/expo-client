@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import Constants from 'expo-constants';
+import { useLocalSearchParams } from 'expo-router';
 
 const isValidEmail = (email: string) =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -10,11 +11,13 @@ const isValidEmail = (email: string) =>
 const RegisterScreen = () => {
   const router = useRouter();
 
+  const { id } = useLocalSearchParams();
   const [name, setName] = useState<string>("")
   const [email, setEmail] = useState<string>("")
   const [error, setError] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
 
+  console.log(id)
 
   const IP: string = Constants.expoConfig?.extra?.IP;
 
