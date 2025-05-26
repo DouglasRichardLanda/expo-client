@@ -6,27 +6,25 @@ const isValidEmail = (email: string) =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 
-const RegisterScreen = () => {
+const VerifyScreen = () => {
   const router = useRouter();
 
   const [name, setName] = useState<string>("")
   const [email, setEmail] = useState<string>("")
   const [error, setError] = useState<boolean>(false)
-  const [loading, setLoading] = useState<boolean>(false)
 
-  const validating = async () => {
+  const validating = () => {
     if (!isValidEmail(email) || name.length < 5) {
       setError(true)
     } else {
-      await fetch('')
-      router.replace("/verify")
+      router.replace("/subscription")
     }
   }
 
   return (
     <View style={styles.container}>
 
-      <Text style={styles.header}>{'Регистрация'}</Text>
+      <Text style={styles.header}>{'Подтверждение'}</Text>
 
       <TextInput
         style={styles.input}
@@ -51,25 +49,6 @@ const RegisterScreen = () => {
       />
 
       {error && <Text style={{color: "red", marginBottom: 10}}>Введите правильные данные</Text>}
-
-      <TouchableOpacity
-        onPress={() => {
-          router.replace("/auth")
-        }}
-        style={{
-          position: 'absolute',
-          bottom: 40,
-          right: 20,
-          backgroundColor: '#007BFF',
-          borderRadius: 50,
-          width: 40,
-          height: 40,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Text style={{ color: '#fff', fontSize: 10 }}>Login</Text>
-      </TouchableOpacity>
 
       <Button title={"Продолжить"} onPress={validating} />
     </View>
@@ -108,4 +87,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegisterScreen;
+export default VerifyScreen;

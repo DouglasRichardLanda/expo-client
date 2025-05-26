@@ -29,11 +29,6 @@ export default function SubscriptionForm() {
         <Text style={{ color: '#fff', fontSize: 10 }}>Login</Text>
       </TouchableOpacity>
 
-
-
-
-
-
       <TouchableOpacity
         activeOpacity={1}
         style={[
