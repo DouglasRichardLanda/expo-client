@@ -3,6 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'rea
 import { useRouter } from 'expo-router';
 import Constants from 'expo-constants';
 import { useLocalSearchParams } from 'expo-router';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const isValidEmail = (email: string) =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -12,28 +13,36 @@ const RegisterScreen = () => {
   const router = useRouter();
 
   const { id } = useLocalSearchParams();
+
   const [name, setName] = useState<string>("")
-  const [email, setEmail] = useState<string>("")
+  const [father, setFather] = useState<string>("")
+  const [password, setPassword] = useState<string>("")
+  const [passwordR, setPasswordR] = useState<string>("")
+  const [birthday, setBirthday] = useState<Date>(new Date())
+
   const [error, setError] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
-
-  console.log(id)
+  const [show, setShow] = useState<boolean>(false)
 
   const IP: string = Constants.expoConfig?.extra?.IP;
 
-  const validating = async () => {
-    if (!isValidEmail(email) || name.length < 5) {
-      setError(true)
-    } else {
-      const response = await fetch(`http://${IP}:5000/register/first`, {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({name, email})
-      })
-      const {success} = await response.json();
-      return success === true ? router.replace("./verify") : null;
-    }
-  }
+  // const validating = async () => {
+  //   if (!isValidEmail(email) || name.length < 5) {
+  //     setError(true)
+  //   } else {
+  //     const response = await fetch(`http://${IP}:5000/register/first`, {
+  //       method: "POST",
+  //       headers: {"Content-Type": "application/json"},
+  //       body: JSON.stringify({name, email})
+  //     })
+  //     const {success} = await response.json();
+  //     return success === true ? router.replace("./verify") : null;
+  //   }
+  // }
+  const onChange = (_: any, selectedDate?: Date) => {
+    setShow(false);
+    if (selectedDate) setBirthday(selectedDate);
+  };
 
   return (
     <View style={styles.container}>
@@ -43,37 +52,64 @@ const RegisterScreen = () => {
 
       <TextInput
         style={styles.input}
-        placeholder="Почта"
-        value={email}
+        placeholder="Имя Фамилия"
+        value={name}
         onChangeText={(text) => {
-          setEmail(text)
+          setName(text)
           setError(false)
         }}
         keyboardType="email-address"
       />
 
+      <Text style={{fontWeight: 800, marginBottom: 10, color: 'gray'}}>Имя отца указывается в иминительном падеже (Игорь, Павел)</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Имя отца"
+        value={father}
+        onChangeText={(text) => {
+          setFather(text)
+          setError(false)
+        }}
+        keyboardType="email-address"
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Пароль"
+        value={password}
+        onChangeText={(text) => {
+          setPassword(text)
+          setError(false)
+        }}
+        keyboardType="email-address"
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Повторите пароль"
+        value={passwordR}
+        onChangeText={(text) => {
+          setPasswordR(text)
+          setError(false)
+        }}
+        keyboardType="email-address"
+      />
+
+      <Text>Дата рождения: {`${birthday.getMonth()} - ${birthday.getDate()} - ${birthday.getFullYear()}`}</Text>
+      {show && <DateTimePicker
+        value={birthday}
+        mode="date"
+        display="default"
+        onChange={onChange}
+      />}
+      <Button title="Выбери Дату" onPress={() => setShow(true)} />
+
       {error && <Text style={{color: "red", marginBottom: 10}}>Введите правильные данные</Text>}
 
-      <TouchableOpacity
-        onPress={() => {
-          router.replace("/auth/auth")
-        }}
-        style={{
-          position: 'absolute',
-          bottom: 40,
-          right: 20,
-          backgroundColor: '#007BFF',
-          borderRadius: 50,
-          width: 40,
-          height: 40,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Text style={{ color: '#fff', fontSize: 10 }}>Login</Text>
-      </TouchableOpacity>
 
-      <Button title={"Продолжить"} onPress={validating} />
+      <Button title={"Продолжить"} onPress={() => {
+        router.replace("/auth/auth")
+      }} />
     </View>
   );
 };

@@ -10,7 +10,6 @@ const isValidEmail = (email: string) =>
 const RegisterScreen = () => {
   const router = useRouter();
 
-  const [name, setName] = useState<string>("")
   const [email, setEmail] = useState<string>("")
   const [error, setError] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
@@ -19,13 +18,13 @@ const RegisterScreen = () => {
   const IP: string = Constants.expoConfig?.extra?.IP;
 
   const validating = async () => {
-    if (!isValidEmail(email) || name.length < 5) {
+    if (!isValidEmail(email)) {
       setError(true)
     } else {
       const response = await fetch(`http://${IP}:5000/register/first`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({name, email})
+        body: JSON.stringify({email})
       })
       const {success} = await response.json();
       return success === true ? router.replace("./verify") : null;
@@ -36,17 +35,6 @@ const RegisterScreen = () => {
     <View style={styles.container}>
 
       <Text style={styles.header}>{'Регистрация'}</Text>
-
-      <TextInput
-        style={styles.input}
-        placeholder="Имя Фамилия"
-        value={name}
-        onChangeText={(text) => {
-          setName(text)
-          setError(false)
-        }}
-        keyboardType="ascii-capable"
-      />
 
       <TextInput
         style={styles.input}
