@@ -21,6 +21,10 @@ const RegisterScreen = () => {
   const [birthday, setBirthday] = useState<Date>(new Date())
 
   const [error, setError] = useState<boolean>(false)
+  const [passwordError, setPasswordError] = useState<boolean>(false)
+  const [nameError, setNameError] = useState<boolean>(false)
+  const [passwordFormatError, setPasswordFormatError] = useState<boolean>(false)
+
   const [loading, setLoading] = useState<boolean>(false)
   const [show, setShow] = useState<boolean>(false)
 
@@ -39,6 +43,30 @@ const RegisterScreen = () => {
   //     return success === true ? router.replace("./verify") : null;
   //   }
   // }
+
+  const submitData = async () => {
+    try {
+      if (password !== passwordR) {
+        setPasswordError(true)
+        return
+      }
+
+      if (name.length < 5 || father.length < 1) {
+        setNameError(true)
+        return
+      }
+
+      if (password.length < 6) {
+        setPasswordFormatError(true)
+        return
+      }
+
+      router.replace("/auth/auth")
+    } catch (e) {
+
+    }
+  }
+
   const onChange = (_: any, selectedDate?: Date) => {
     setShow(false);
     if (selectedDate) setBirthday(selectedDate);
@@ -49,13 +77,13 @@ const RegisterScreen = () => {
 
       <Text style={styles.header}>{'Заполнение учетной записи'}</Text>
 
-
       <TextInput
-        style={styles.input}
+        style={[styles.input, nameError && styles.error]}
         placeholder="Имя Фамилия"
         value={name}
         onChangeText={(text) => {
           setName(text)
+          setNameError(false)
           setError(false)
         }}
         keyboardType="email-address"
@@ -63,37 +91,43 @@ const RegisterScreen = () => {
 
       <Text style={{fontWeight: 800, marginBottom: 10, color: 'gray'}}>Имя отца указывается в иминительном падеже (Игорь, Павел)</Text>
       <TextInput
-        style={styles.input}
+        style={[styles.input, nameError && styles.error]}
         placeholder="Имя отца"
         value={father}
         onChangeText={(text) => {
           setFather(text)
+          setNameError(false)
           setError(false)
         }}
         keyboardType="email-address"
       />
 
       <TextInput
-        style={styles.input}
+        style={[styles.input, passwordError && styles.error || passwordFormatError && styles.error]}
         placeholder="Пароль"
         value={password}
         onChangeText={(text) => {
           setPassword(text)
-          setError(false)
+          setPasswordError(false)
+          setPasswordFormatError(false)
         }}
         keyboardType="email-address"
       />
 
       <TextInput
-        style={styles.input}
+        style={[styles.input, passwordError && styles.error || passwordFormatError && styles.error]}
         placeholder="Повторите пароль"
         value={passwordR}
         onChangeText={(text) => {
           setPasswordR(text)
-          setError(false)
+          setPasswordError(false)
+          setPasswordFormatError(false)
         }}
         keyboardType="email-address"
       />
+
+      {passwordError && <Text style={[styles.error,{marginBottom: 15}]}>Пароли не сходятся</Text>}
+      {passwordFormatError && <Text style={[styles.error,{marginBottom: 15}]}>Пароль должен быть минимум 6 символов</Text>}
 
       <Text>Дата рождения: {`${birthday.getMonth()} - ${birthday.getDate()} - ${birthday.getFullYear()}`}</Text>
       {show && <DateTimePicker
@@ -107,9 +141,7 @@ const RegisterScreen = () => {
       {error && <Text style={{color: "red", marginBottom: 10}}>Введите правильные данные</Text>}
 
 
-      <Button title={"Продолжить"} onPress={() => {
-        router.replace("/auth/auth")
-      }} />
+      <Button title={"Продолжить"} onPress={submitData} />
     </View>
   );
 };
@@ -144,6 +176,10 @@ const styles = StyleSheet.create({
     color: '#007BFF',
     textAlign: 'center',
   },
+  error: {
+    color: "red",
+    borderColor: "red"
+  }
 });
 
 export default RegisterScreen;
