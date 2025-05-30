@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import Constants from 'expo-constants';
 import { useLocalSearchParams } from 'expo-router';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const isValidEmail = (email: string) =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -61,9 +62,10 @@ const RegisterScreen = () => {
         return
       }
 
-      router.replace("/auth/auth")
+      await AsyncStorage.setItem('userToken', 'dummy_token');
+      router.replace('/');
     } catch (e) {
-
+      console.error(e)
     }
   }
 
