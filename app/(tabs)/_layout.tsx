@@ -9,7 +9,7 @@ export default function TabsLayout() {
 
   const handleSignOut = async () => {
     await AsyncStorage.removeItem('userToken');
-    router.replace('/auth'); // Redirect to auth screen
+    router.replace('/auth/auth'); // Redirect to auth screen
   };
 
   return (

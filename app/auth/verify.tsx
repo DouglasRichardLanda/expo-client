@@ -18,20 +18,22 @@ const VerifyScreen = () => {
       body: JSON.stringify({usercode: code})
     })
     const {success, id} = await response.json();
-    return success === true ? router.replace(`./fill?id=${id}`) : null;
+    console.log(success)
+    return success === true ? router.replace(`./fill?id=${id}`) : setError(true);
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Код был выслан вам на почту</Text>
+      <Text style={[styles.label]}>Код был выслан вам на почту</Text>
       <TextInput
-        style={styles.input}
+        style={[styles.input, error && styles.errorLabel]}
         keyboardType="numeric"
         maxLength={4}
         value={code}
         onChangeText={setCode}
         placeholder="_ _ _ _"
       />
+      {error && <Text style={{ marginBottom: 15, color: "red" }}>Неправильный ввод кода</Text>}
       <Button title="Подтвердить" disabled={code.length !== 4} onPress={validating} />
 
     </View>
@@ -42,6 +44,7 @@ const VerifyScreen = () => {
 const styles = StyleSheet.create({
   container: { padding: 20, marginTop: 50 },
   label: { fontSize: 16, marginBottom: 10, textAlign: "center" },
+  errorLabel: { borderColor: "red" },
   input: {
     borderWidth: 1,
     borderColor: '#999',
