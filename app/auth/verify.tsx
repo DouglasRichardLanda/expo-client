@@ -18,7 +18,6 @@ const VerifyScreen = () => {
       body: JSON.stringify({usercode: code})
     })
     const {success, id} = await response.json();
-    console.log(success)
     return success === true ? router.replace(`./fill?id=${id}`) : setError(true);
   }
 
