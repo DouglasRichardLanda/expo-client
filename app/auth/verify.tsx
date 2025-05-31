@@ -33,6 +33,7 @@ const VerifyScreen = () => {
         onChangeText={setCode}
         placeholder="_ _ _ _"
       />
+
       {error && <Text style={{ marginBottom: 15, color: "red" }}>Неправильный ввод кода</Text>}
 
       <CustomBtn label={`Подтвердить`} dis={code.length !== 4} validating={validating} />

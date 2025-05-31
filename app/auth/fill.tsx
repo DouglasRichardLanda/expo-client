@@ -5,6 +5,8 @@ import Constants from 'expo-constants';
 import { useLocalSearchParams } from 'expo-router';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Picker } from '@react-native-picker/picker';
+import DateWheelPicker from "@/components/custom/DateWheel";
 
 const isValidEmail = (email: string) =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -12,6 +14,11 @@ const isValidEmail = (email: string) =>
 
 const RegisterScreen = () => {
   const router = useRouter();
+
+  const [year, setYear] = useState(2025);
+  const [month, setMonth] = useState(1);
+  const [day, setDay] = useState(1);
+
 
   const { email } = useLocalSearchParams();
 
@@ -29,21 +36,9 @@ const RegisterScreen = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const [show, setShow] = useState<boolean>(false)
 
-  const IP: string = Constants.expoConfig?.extra?.IP;
+  const [selectedNumber, setSelectedNumber] = useState(1);
 
-  // const validating = async () => {
-  //   if (!isValidEmail(email) || name.length < 5) {
-  //     setError(true)
-  //   } else {
-  //     const response = await fetch(`http://${IP}:5000/register/first`, {
-  //       method: "POST",
-  //       headers: {"Content-Type": "application/json"},
-  //       body: JSON.stringify({name, email})
-  //     })
-  //     const {success} = await response.json();
-  //     return success === true ? router.replace("./verify") : null;
-  //   }
-  // }
+  const IP: string = Constants.expoConfig?.extra?.IP;
 
   const submitData = async () => {
     try {
@@ -98,6 +93,7 @@ const RegisterScreen = () => {
       />
 
       <Text style={{fontWeight: 800, marginBottom: 10, color: 'gray'}}>Имя отца указывается в иминительном падеже (Игорь, Павел)</Text>
+
       <TextInput
         style={[styles.input, nameError && styles.error]}
         placeholder="Имя отца"
@@ -138,13 +134,17 @@ const RegisterScreen = () => {
       {passwordFormatError && <Text style={[styles.error,{marginBottom: 15}]}>Пароль должен быть минимум 6 символов</Text>}
 
       <Text>Дата рождения: {`${birthday.getMonth()} - ${birthday.getDate()} - ${birthday.getFullYear()}`}</Text>
-      {show && <DateTimePicker
-        value={birthday}
-        mode="date"
-        display="default"
-        onChange={onChange}
-      />}
-      <Button title="Выбери Дату" onPress={() => setShow(true)} />
+
+      {/*{show && <DateTimePicker*/}
+      {/*  value={birthday}*/}
+      {/*  mode="date"*/}
+      {/*  display="default"*/}
+      {/*  onChange={onChange}*/}
+      {/*/>}*/}
+
+      {/*<Button title="Выбери Дату" onPress={() => setShow(true)} />*/}
+
+      <DateWheelPicker day={day} setDay={setDay} month={month} setMonth={setMonth} year={year} setYear={setYear} />
 
       {error && <Text style={{color: "red", marginBottom: 10}}>Введите правильные данные</Text>}
 
