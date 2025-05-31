@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import Constants from 'expo-constants';
+import CustomBtn from "@/components/custom/CustomBtn";
 
 const isValidEmail = (email: string) =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -49,15 +50,8 @@ const RegisterScreen = () => {
 
       {error && <Text style={{color: "red", marginBottom: 10}}>Введите правильные данные</Text>}
 
-      <TouchableOpacity style={{ backgroundColor: 'blue', padding: 10, borderRadius: 1, marginBottom: 15 }} onPress={validating}>
-        <Text style={{ color: 'white', textAlign: 'center' }}>Продолжить регистрацию</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={{ backgroundColor: 'blue', padding: 10, borderRadius: 1 }} onPress={() => {
-        router.replace("/auth/auth")
-      }}>
-        <Text style={{ color: 'white', textAlign: 'center' }}>Вернуться к входу</Text>
-      </TouchableOpacity>
+      <CustomBtn label={'Продолжить регистрацию'} validating={validating} />
+      <CustomBtn label={'Вернуться к входу'} validating={() => router.replace("/auth/auth")} />
     </View>
   );
 };
