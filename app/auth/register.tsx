@@ -49,26 +49,15 @@ const RegisterScreen = () => {
 
       {error && <Text style={{color: "red", marginBottom: 10}}>Введите правильные данные</Text>}
 
-      <TouchableOpacity
-        onPress={() => {
-          router.replace("/auth/auth")
-        }}
-        style={{
-          position: 'absolute',
-          bottom: 40,
-          right: 20,
-          backgroundColor: '#007BFF',
-          borderRadius: 50,
-          width: 40,
-          height: 40,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Text style={{ color: '#fff', fontSize: 10 }}>Login</Text>
+      <TouchableOpacity style={{ backgroundColor: 'blue', padding: 10, borderRadius: 1, marginBottom: 15 }} onPress={validating}>
+        <Text style={{ color: 'white', textAlign: 'center' }}>Продолжить регистрацию</Text>
       </TouchableOpacity>
 
-      <Button title={"Продолжить"} onPress={validating} />
+      <TouchableOpacity style={{ backgroundColor: 'blue', padding: 10, borderRadius: 1 }} onPress={() => {
+        router.replace("/auth/auth")
+      }}>
+        <Text style={{ color: 'white', textAlign: 'center' }}>Вернуться к входу</Text>
+      </TouchableOpacity>
     </View>
   );
 };

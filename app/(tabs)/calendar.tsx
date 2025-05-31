@@ -13,8 +13,9 @@ import {useEffect, useState} from "react";
 import {Picker} from '@react-native-picker/picker';
 import CalendarDay from "@/components/CalendarDay";
 import {useRouter} from "expo-router";
+import Constants from "expo-constants";
 
-const IP = "192.168.0.27"
+const IP = Constants.expoConfig?.extra?.IP;
 async function fetch_week_report (id: string, date: string) {
   return await fetch(`http://${IP}:5000/api/weekreport?id=${id}&current=${date}`, {
     method: "GET",
