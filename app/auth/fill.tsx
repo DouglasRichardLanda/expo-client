@@ -19,7 +19,6 @@ const RegisterScreen = () => {
   const [month, setMonth] = useState(1);
   const [day, setDay] = useState(1);
 
-
   const { email } = useLocalSearchParams();
 
   const [name, setName] = useState<string>("")
@@ -57,10 +56,12 @@ const RegisterScreen = () => {
         return
       }
 
+      const date = new Date(year, month - 1, day);
+
       const response = await fetch(`http://${IP}:5000/register/third`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({name, father, password, birthday, email: email})
+        body: JSON.stringify({name, father, password, birthday: date, email: email})
       })
 
       await AsyncStorage.setItem('userToken', 'dummy_token');
@@ -69,11 +70,6 @@ const RegisterScreen = () => {
       console.error(e)
     }
   }
-
-  const onChange = (_: any, selectedDate?: Date) => {
-    setShow(false);
-    if (selectedDate) setBirthday(selectedDate);
-  };
 
   return (
     <View style={styles.container}>
@@ -130,24 +126,11 @@ const RegisterScreen = () => {
         keyboardType="email-address"
       />
 
-      {passwordError && <Text style={[styles.error,{marginBottom: 15}]}>Пароли не сходятся</Text>}
-      {passwordFormatError && <Text style={[styles.error,{marginBottom: 15}]}>Пароль должен быть минимум 6 символов</Text>}
-
-      <Text>Дата рождения: {`${birthday.getMonth()} - ${birthday.getDate()} - ${birthday.getFullYear()}`}</Text>
-
-      {/*{show && <DateTimePicker*/}
-      {/*  value={birthday}*/}
-      {/*  mode="date"*/}
-      {/*  display="default"*/}
-      {/*  onChange={onChange}*/}
-      {/*/>}*/}
-
-      {/*<Button title="Выбери Дату" onPress={() => setShow(true)} />*/}
-
       <DateWheelPicker day={day} setDay={setDay} month={month} setMonth={setMonth} year={year} setYear={setYear} />
 
+      {passwordError && <Text style={[styles.error,{marginBottom: 15}]}>Пароли не сходятся</Text>}
+      {passwordFormatError && <Text style={[styles.error,{marginBottom: 15}]}>Пароль должен быть минимум 6 символов</Text>}
       {error && <Text style={{color: "red", marginBottom: 10}}>Введите правильные данные</Text>}
-
 
       <Button title={"Продолжить"} onPress={submitData} />
     </View>
