@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import Constants from "expo-constants";
+import CustomBtn from "@/components/custom/CustomBtn";
 
 
 const VerifyScreen = () => {
@@ -33,8 +34,8 @@ const VerifyScreen = () => {
         placeholder="_ _ _ _"
       />
       {error && <Text style={{ marginBottom: 15, color: "red" }}>Неправильный ввод кода</Text>}
-      <Button title="Подтвердить" disabled={code.length !== 4} onPress={validating} />
 
+      <CustomBtn label={`Подтвердить`} dis={code.length !== 4} validating={validating} />
     </View>
   );
 };
