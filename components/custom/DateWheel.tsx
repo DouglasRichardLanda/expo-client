@@ -38,7 +38,7 @@ export default function DateWheelPicker({
   const days = Array.from({length: 31}, (_, i) => i + 1);
 
   return (
-    <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+    <View style={{flexDirection: 'row', justifyContent: 'space-around', marginBottom: 15}}>
       {/* Year Picker */}
       <View style={{flex: 1}}>
         <Text style={{textAlign: 'center', fontWeight: 800}}>Year</Text>

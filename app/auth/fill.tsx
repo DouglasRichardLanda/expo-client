@@ -7,6 +7,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from '@react-native-picker/picker';
 import DateWheelPicker from "@/components/custom/DateWheel";
+import CustomBtn from "@/components/custom/CustomBtn";
 
 const isValidEmail = (email: string) =>
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -64,8 +65,8 @@ const RegisterScreen = () => {
         body: JSON.stringify({name, father, password, birthday: date, email: email})
       })
 
-      await AsyncStorage.setItem('userToken', 'dummy_token');
-      router.replace('/');
+      // await AsyncStorage.setItem('userToken', 'dummy_token');
+      router.replace('/auth/auth');
     } catch (e) {
       console.error(e)
     }
@@ -132,7 +133,7 @@ const RegisterScreen = () => {
       {passwordFormatError && <Text style={[styles.error,{marginBottom: 15}]}>Пароль должен быть минимум 6 символов</Text>}
       {error && <Text style={{color: "red", marginBottom: 10}}>Введите правильные данные</Text>}
 
-      <Button title={"Продолжить"} onPress={submitData} />
+      <CustomBtn label={"Продолжить"} validating={submitData} />
     </View>
   );
 };
