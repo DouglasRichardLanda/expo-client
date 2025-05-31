@@ -13,7 +13,7 @@ const isValidEmail = (email: string) =>
 const RegisterScreen = () => {
   const router = useRouter();
 
-  const { id } = useLocalSearchParams();
+  const { email } = useLocalSearchParams();
 
   const [name, setName] = useState<string>("")
   const [father, setFather] = useState<string>("")
@@ -61,6 +61,12 @@ const RegisterScreen = () => {
         setPasswordFormatError(true)
         return
       }
+
+      const response = await fetch(`http://${IP}:5000/register/third`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({name, father, password, birthday, email: email})
+      })
 
       await AsyncStorage.setItem('userToken', 'dummy_token');
       router.replace('/');

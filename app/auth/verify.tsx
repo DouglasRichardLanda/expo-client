@@ -17,8 +17,8 @@ const VerifyScreen = () => {
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({usercode: code})
     })
-    const {success, id} = await response.json();
-    return success === true ? router.replace(`./fill?id=${id}`) : setError(true);
+    const {success, email} = await response.json();
+    return success === true ? router.replace(`./fill?email=${email}`) : setError(true);
   }
 
   return (
