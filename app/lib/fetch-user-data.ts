@@ -12,10 +12,8 @@ export async function fetch_user_data (email: string) {
     })
     const data = await response.json()
 
-    console.log(data)
     return data
-
   } catch (e) {
-
+    return {success: false}
   }
 }
