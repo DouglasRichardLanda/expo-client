@@ -47,7 +47,12 @@ export default function ProfileScreen() {
       return
     }
     setLoadingBTN(true)
-    await change_user_name(newName, newFather)
+    const email = await AsyncStorage.getItem('userToken');
+    if (typeof email === "string") {
+      change_user_name(newName, newFather, email).then(() => {
+        router.replace("/");
+      })
+    }
   }
 
 
