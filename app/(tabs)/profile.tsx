@@ -5,11 +5,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {useRouter} from "expo-router";
 import CustomBtnLight from "@/components/custom/CustomBtnLight";
 import CustomBtn from "@/components/custom/CustomBtn";
+import {change_user_name} from "@/app/lib/change-user-name";
 
 export default function ProfileScreen() {
 
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(true)
+  const [loadingBTN, setLoadingBTN] = useState<boolean>(false)
   const [userData, setUserData] = useState<null | any>(null)
   const [changeName, setChangeName] = useState<boolean>(false)
   const [newName, setNewName] = useState<string | null>(null)
@@ -39,6 +41,16 @@ export default function ProfileScreen() {
     fetching_data()
   }, []);
 
+  const change_name = async () => {
+    if (!newName || newName?.length < 2 || !newFather || newFather?.length < 2) {
+      setNameError(true)
+      return
+    }
+    setLoadingBTN(true)
+    await change_user_name(newName, newFather)
+  }
+
+
   return (
     <View style={styles.container}>
       {/* User Details */}
@@ -60,7 +72,7 @@ export default function ProfileScreen() {
         {/*  {user.packageType} Package*/}
         {/*</Text>*/}
 
-        <CustomBtnLight label={'Сменить имя'} validating={() => setChangeName(true)} />
+        <CustomBtn label={'Сменить имя'} validating={() => setChangeName(prev => !prev)} />
 
         {changeName && newFather !== null && newName !== null && <View>
           <Text style={{fontWeight: 800, marginBottom: 10, color: 'gray'}}>Новые Фамили и имя</Text>
@@ -89,7 +101,9 @@ export default function ProfileScreen() {
             keyboardType="email-address"
           />
 
-          <CustomBtn label={'Сменить имя'} validating={() => {}} />
+          {nameError && <Text style={{color: "red", marginBottom: 15}}>Пустные поля не допустимы</Text>}
+
+          <CustomBtn dis={loadingBTN} label={'Сменить имя'} validating={change_name} />
         </View>}
       </View>
       }
