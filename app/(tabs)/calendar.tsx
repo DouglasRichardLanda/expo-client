@@ -14,14 +14,8 @@ import {Picker} from '@react-native-picker/picker';
 import CalendarDay from "@/components/CalendarDay";
 import {useRouter} from "expo-router";
 import Constants from "expo-constants";
-
-const IP = Constants.expoConfig?.extra?.IP;
-async function fetch_week_report (id: string, date: string) {
-  return await fetch(`http://${IP}:5000/api/weekreport?id=${id}&current=${date}`, {
-    method: "GET",
-    headers: {"Content-Type": "application/json"}
-  })
-}
+import {fetch_week_report} from "@/app/lib/fetch-week-report";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function CalendarPage() {
   LocaleConfig.locales['ru'] = {
@@ -45,30 +39,35 @@ export default function CalendarPage() {
     today: "Сегодня"
   };
   LocaleConfig.defaultLocale = 'ru';
-
-  const [state14, setState14] = useState<{first: string, second: string, full: string}[]>([])
   const router = useRouter()
 
-  const [selected, setSelected] = useState('');
-  const [note, setNote] = useState('');
+  const [state7, setState7] = useState<{full: string, first: string, second: string}[]>([])
+  //
+  // const [selected, setSelected] = useState('');
+  // const [note, setNote] = useState('');
 
-  const today = new Date().toISOString().split('T')[0];
+  // const today = new Date().toISOString().split('T')[0];
+  const today = new Date()
+
   const [processed, setProcessed] = useState<boolean>(false)
 
   useEffect(() => {
-    fetch_week_report("12345678", today).then(async (data: any) => {
-      const {firstHalfResults, secondHalfResults, fullDayResults} = await data.json()
-      for (let i = 0; i < 14; i++) {
-        setState14(prev => [...prev, {
-          first: firstHalfResults[i],
-          second: secondHalfResults[i],
-          full: fullDayResults[i]
-        }])
+    const fetching_report = async () => {
+      const email = await AsyncStorage.getItem('userToken');
+
+      if (typeof email === "string") {
+        const now = new Date()
+        const response = await fetch_week_report(email, now.toString())
+        setState7(response)
       }
-    }).then(() => setProcessed(true))
+
+      setProcessed(true)
+    }
+    fetching_report()
   }, [])
 
-  const days: {date: string, id: number}[] = Array.from({ length: 14 }, (_, i) => {
+
+  const days: {date: string, id: number}[] = Array.from({ length: 7 }, (_, i) => {
     const d = new Date(today);
     d.setDate(d.getDate() + i);
     return { date: d.toISOString().split('T')[0], id: i };
@@ -79,6 +78,7 @@ export default function CalendarPage() {
 
   const maxDate = twoWeeksFromNow.toISOString().split('T')[0];
 
+  // loading component
   if (!processed) {
     return (
       <View style={styles.spinnerContainer}>
@@ -86,8 +86,8 @@ export default function CalendarPage() {
       </View>
     );
   }
-  // @ts-ignore
-  // @ts-ignore
+
+  // actual component
   return (
     <ScrollView>
       <Calendar
@@ -119,6 +119,7 @@ export default function CalendarPage() {
           </Text>
         )}
         markingType="custom"
+
         dayComponent={({ date, state }:{date: any, state: any}) => {
           const dayEntry = days.find((d) => d.date === date.dateString);
           const isMarked = !!dayEntry;
@@ -126,7 +127,7 @@ export default function CalendarPage() {
           const indexEntry = dayEntry?.id;
           const isToday = date.dateString === today;
 
-
+          // Day component
           return (
             <TouchableOpacity
               onPress={() => {
@@ -168,7 +169,7 @@ export default function CalendarPage() {
                           width: 6,
                           height: 6,
                           borderRadius: 3,
-                          backgroundColor: dayEntry ? state14[dayEntry.id].first : "black",
+                          backgroundColor: dayEntry ? state7[dayEntry.id].first : "black",
                           marginHorizontal: 1,
                         }}
                       />
@@ -180,7 +181,7 @@ export default function CalendarPage() {
                           width: 9,
                           height: 9,
                           borderRadius: 3,
-                          backgroundColor: dayEntry ? state14[dayEntry.id].full : "black",
+                          backgroundColor: dayEntry ? state7[dayEntry.id].full : "black",
                           marginHorizontal: 1,
                         }}
                       />
@@ -192,7 +193,7 @@ export default function CalendarPage() {
                           width: 6,
                           height: 6,
                           borderRadius: 3,
-                          backgroundColor: dayEntry ? state14[dayEntry.id].second : "black",
+                          backgroundColor: dayEntry ? state7[dayEntry.id].second : "black",
                           marginHorizontal: 1,
                         }}
                       />
@@ -220,21 +221,6 @@ export default function CalendarPage() {
           );
         }}
       />
-
-
-      {/*<View style={styles.notebookContainer}>*/}
-      {/*  <Text style={styles.notebookHeader}>Заметки на {selected || "(выбери день)"}</Text>*/}
-      {/*  <ScrollView style={styles.notebook}>*/}
-      {/*    <TextInput*/}
-      {/*      style={styles.textInput}*/}
-      {/*      placeholder="Опиши свой день..."*/}
-      {/*      multiline*/}
-      {/*      value={note}*/}
-      {/*      onChangeText={setNote}*/}
-      {/*    />*/}
-
-      {/*  </ScrollView>*/}
-      {/*</View>*/}
     </ScrollView>
   )
 }
