@@ -16,6 +16,9 @@ import {useRouter} from "expo-router";
 import Constants from "expo-constants";
 import {fetch_week_report} from "@/app/lib/fetch-week-report";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {fetch_month_report} from "@/app/lib/fetch-month-report";
+
+
 
 export default function CalendarPage() {
   LocaleConfig.locales['ru'] = {
@@ -41,14 +44,10 @@ export default function CalendarPage() {
   LocaleConfig.defaultLocale = 'ru';
   const router = useRouter()
 
-  const [state7, setState7] = useState<{full: string, first: string, second: string}[]>([])
-  //
-  // const [selected, setSelected] = useState('');
-  // const [note, setNote] = useState('');
+  const PACKAGE: "standard" | "premium" = "standard";
 
-  // const today = new Date().toISOString().split('T')[0];
-  const today = new Date()
-
+  const [stateFull, setStateFull] = useState<{full: string, first: string, second: string}[]>([])
+  const today = new Date().toISOString().split('T')[0];
   const [processed, setProcessed] = useState<boolean>(false)
 
   useEffect(() => {
@@ -57,26 +56,29 @@ export default function CalendarPage() {
 
       if (typeof email === "string") {
         const now = new Date()
-        const response = await fetch_week_report(email, now.toString())
-        setState7(response)
+        let response;
+        if (PACKAGE === "standard") {
+          response = await fetch_week_report(email, now.toString())
+        } else {
+          response = await fetch_month_report(email, now.toString())
+        }
+        setStateFull(response)
       }
-
       setProcessed(true)
     }
     fetching_report()
   }, [])
 
-
-  const days: {date: string, id: number}[] = Array.from({ length: 7 }, (_, i) => {
+  const days: {date: string, id: number}[] = Array.from({ length: PACKAGE === "standard" ? 7 : 30 }, (_, i) => {
     const d = new Date(today);
     d.setDate(d.getDate() + i);
     return { date: d.toISOString().split('T')[0], id: i };
   });
 
-  const twoWeeksFromNow = new Date();
-  twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14);
+  const WeekFromNow = new Date();
+  WeekFromNow.setDate(WeekFromNow.getDate() + PACKAGE === "standard" ? 6 : 29);
 
-  const maxDate = twoWeeksFromNow.toISOString().split('T')[0];
+  const maxDate = WeekFromNow.toISOString().split('T')[0];
 
   // loading component
   if (!processed) {
@@ -125,6 +127,7 @@ export default function CalendarPage() {
           const isMarked = !!dayEntry;
           const daynote = date.dateString;
           const indexEntry = dayEntry?.id;
+
           const isToday = date.dateString === today;
 
           // Day component
@@ -156,7 +159,7 @@ export default function CalendarPage() {
                   //   }
                   //   console.log(selected) // Set the selected date when the day is pressed
                   // }}
-                  style={{ color: state === 'disabled' ? '#d9e1e8' : '#2d4150' }}>
+                  style={{ color: state === 'disabled' ? '#2d4150' : '#2d4150' }}>
                   {date.day}
                 </Text>
 
@@ -169,7 +172,7 @@ export default function CalendarPage() {
                           width: 6,
                           height: 6,
                           borderRadius: 3,
-                          backgroundColor: dayEntry ? state7[dayEntry.id].first : "black",
+                          backgroundColor: dayEntry ? stateFull[dayEntry.id].first : "black",
                           marginHorizontal: 1,
                         }}
                       />
@@ -181,7 +184,7 @@ export default function CalendarPage() {
                           width: 9,
                           height: 9,
                           borderRadius: 3,
-                          backgroundColor: dayEntry ? state7[dayEntry.id].full : "black",
+                          backgroundColor: dayEntry ? stateFull[dayEntry.id].full : "black",
                           marginHorizontal: 1,
                         }}
                       />
@@ -193,7 +196,7 @@ export default function CalendarPage() {
                           width: 6,
                           height: 6,
                           borderRadius: 3,
-                          backgroundColor: dayEntry ? state7[dayEntry.id].second : "black",
+                          backgroundColor: dayEntry ? stateFull[dayEntry.id].second : "black",
                           marginHorizontal: 1,
                         }}
                       />
