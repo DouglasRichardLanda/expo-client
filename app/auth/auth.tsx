@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CustomBtn from "@/components/custom/CustomBtn";
+import {login_check} from "@/app/lib/login-check";
 
-const AuthScreen = () => {
+export default function AuthScreen ()  {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLogin, setIsLogin] = useState(true);
+  const [error, setError] = useState<boolean>(false)
+
   const router = useRouter();
 
   useEffect(() => {
@@ -23,46 +26,54 @@ const AuthScreen = () => {
   }, []);
 
   const handleSubmit = async () => {
-    if (isLogin) {
-      console.log('Logging in with', email, password);
-      await AsyncStorage.setItem('userToken', 'dummy_token');
+
+    const response = await login_check(email, password)
+
+    if (response.data) {
+      await AsyncStorage.setItem('userToken', response.data.email);
       router.replace('/');
     } else {
-      console.log('Registering with', email, password);
-      // Handle registration logic here
+      setError(true)
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>{isLogin ? 'Login' : 'Register'}</Text>
+      <Text style={styles.header}>Вход в учетную запись</Text>
 
       <TextInput
         style={styles.input}
-        placeholder="Email"
+        placeholder="Почта"
         value={email}
-        onChangeText={setEmail}
+        onChangeText={(text) => {
+          setError(false)
+          setEmail(text)
+        }}
         keyboardType="email-address"
       />
 
       <TextInput
         style={styles.input}
-        placeholder="Password"
+        placeholder="Пароль"
         value={password}
-        onChangeText={setPassword}
+        onChangeText={(text) => {
+          setError(false)
+          setPassword(text)
+        }}
         secureTextEntry
       />
 
-      <Button title={isLogin ? 'Login' : 'Register'} onPress={handleSubmit} />
+      {error && <Text style={{color: "red", marginBottom: 15}}>Неправельные данные</Text>}
+
+      <CustomBtn label={'Войти'} validating={handleSubmit} />
 
       <TouchableOpacity onPress={async () => {
-        const dummyToken = 'dummy_user_token_123'; // Dummy token
-        await AsyncStorage.setItem('userToken', dummyToken);
+        // const dummyToken = 'dummy_user_token_123'; // Dummy token
+        // await AsyncStorage.setItem('userToken', dummyToken);
         router.replace('./register');
-        // setIsLogin(!isLogin)
       }} style={styles.switchButton}>
         <Text style={styles.switchText}>
-          {isLogin ? "Don't have an account? Register" : 'Already have an account? Login'}
+          Создать учетную запись
         </Text>
       </TouchableOpacity>
     </View>
@@ -100,4 +111,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AuthScreen;
