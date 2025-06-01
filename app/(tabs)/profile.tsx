@@ -1,5 +1,8 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
+import {fetch_user_data} from "@/app/lib/fetch-user-data";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {useRouter} from "expo-router";
 
 export default function ProfileScreen() {
   const user = {
@@ -10,12 +13,27 @@ export default function ProfileScreen() {
     registrationDate: '2024-03-22',
     packageType: 'Premium',
   };
+  const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(true)
+  const [userData, setUserData] = useState<null | any>(null)
+
+  useEffect(() => {
+    const fetching_data = async () => {
+      const email = await AsyncStorage.getItem('userToken');
+
+      if (typeof email === 'string') {
+        fetch_user_data(email).then(() => {
+
+        })
+      } else {
+        router.replace("/auth/auth")
+      }
+    }
+    fetching_data()
+  }, []);
 
   return (
     <View style={styles.container}>
-      {/* Profile Image */}
-      <Image source={{ uri: user.avatar }} style={styles.avatar} />
-
       {/* User Details */}
       <Text style={styles.name}>{user.firstName} {user.lastName}</Text>
       <Text style={styles.info}>Email: {user.email}</Text>
@@ -30,7 +48,6 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#fff',
     padding: 20,
