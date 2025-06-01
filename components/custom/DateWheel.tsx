@@ -19,7 +19,7 @@ export default function DateWheelPicker({
 }) {
 
   const currentYear = new Date().getFullYear();
-  const years = Array.from({length: 100}, (_, i) => currentYear - i);
+  const years = Array.from({length: 100}, (_, i) => (currentYear + 3) - i);
 
   const months = [
     {label: 'Январь', value: 1},
@@ -41,7 +41,7 @@ export default function DateWheelPicker({
     <View style={{flexDirection: 'row', justifyContent: 'space-around', marginBottom: 15}}>
       {/* Year Picker */}
       <View style={{flex: 1}}>
-        <Text style={{textAlign: 'center', fontWeight: 800}}>Year</Text>
+        <Text style={{textAlign: 'center', fontWeight: 800}}>Год</Text>
         <Picker selectedValue={year} onValueChange={setYear}>
           {years.map((y) => (
             <Picker.Item key={y} label={y.toString()} value={y}/>
@@ -51,7 +51,7 @@ export default function DateWheelPicker({
 
       {/* Month Picker */}
       <View style={{flex: 1}}>
-        <Text style={{textAlign: 'center', fontWeight: 800}}>Month</Text>
+        <Text style={{textAlign: 'center', fontWeight: 800}}>Месяц</Text>
         <Picker selectedValue={month} onValueChange={setMonth}>
           {months.map((m) => (
             <Picker.Item key={m.value} label={m.label} value={m.value}/>
@@ -61,7 +61,7 @@ export default function DateWheelPicker({
 
       {/* Day Picker */}
       <View style={{flex: 1}}>
-        <Text style={{textAlign: 'center', fontWeight: 800}}>Day</Text>
+        <Text style={{textAlign: 'center', fontWeight: 800}}>День</Text>
         <Picker selectedValue={day} onValueChange={setDay}>
           {days.map((d) => (
             <Picker.Item key={d} label={d.toString()} value={d}/>
